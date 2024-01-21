@@ -10,7 +10,7 @@ import KMPSearch from "@/lib/Algo";
 
 const Password = () => {
   const [problem, setProblem] = useState([]);
-
+  const [password, setPassword] = useState(null)
   const user = useContext(UserContext);
   let kuchbhi = Object.values(user);
   let txt2 = [];
@@ -18,9 +18,11 @@ const Password = () => {
 
   for (let i = 0; i < max; i++) {
     for (let j = 0; j < kuchbhi[i]?.length - 1; j++) {
-      const x = kuchbhi[i][j];
-      const y = kuchbhi[i][j + 1];
-      txt2.push(x + y);
+      const x = kuchbhi[i][j].toLowerCase();
+      const y = kuchbhi[i][j + 1].toLowerCase();
+      if (!txt2.includes(x + y)) {
+        txt2.push(x + y);
+      }
     }
   }
 
@@ -32,16 +34,21 @@ const Password = () => {
   } = useForm();
 
   const onSubmit = (data) => {
+    setPassword(data.password)
     if (txt2.length === 0) {
       return;
     }
     let problems = [];
     console.log(data);
+    let password = data.password.toLowerCase()
+
     txt2.forEach((e) => {
-      KMPSearch(e, data.password) !== null &&
-        problems.push([...KMPSearch(e, data.password)]);
+      KMPSearch(e, password) !== null &&
+        problems.push(KMPSearch(e, password)) &&
+        console.log(KMPSearch(e, password));
     });
-    setProblem((prev) => [...prev, ...problems]);
+    setProblem([...problems]);
+    
   };
 
   return (
@@ -49,19 +56,19 @@ const Password = () => {
       <div className="w-[40vw] flex flex-col gap-6 items-center">
         <Label htmlFor="password">Password</Label>
         <Input
-          type="password"
+          type="text"
           {...register("password")}
           placeholder="Password"
           id="password"
         />
         <Button className="my-3">Check</Button>
-        {problem.length!==0 && (
+        {problem.length !== 0 && (
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Error</AlertTitle>
             {problem.map((e, i) => (
               <AlertDescription key={i}>
-                Similiarity found at {txt2[problem[e]]}{" "}
+                Similiarity found at {password[e[0]]}{" "}
               </AlertDescription>
             ))}
           </Alert>
