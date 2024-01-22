@@ -33,7 +33,7 @@ const Form = ({ changeData }) => {
 
     console.log(data)
     changeData(data);
-    // await axios.post("http://localhost:3000/", data)
+    await axios.post("http://localhost:3000/", data)
     navigate("/password");
   };
 
@@ -46,12 +46,12 @@ const Form = ({ changeData }) => {
   }
 
   return (
-    <Card className="w-[75vw] shadow-xl">
+    <Card className="w-[75vw] shadow-xl text-gray-700 bg-[#52B69A] ">
       <CardHeader>
         <CardTitle>
           Enhance Your Security: Craft a Robust Password Today!
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-white">
           Please enter your details below, and we'll analyze them to determine
           if your password is strong or weak. Your online security matters to
           us!

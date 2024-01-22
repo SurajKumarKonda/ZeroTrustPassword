@@ -1,36 +1,13 @@
-function computeLPSArray(pat) {
-  const M = pat.length;
-  const lps = Array(M).fill(0);
-  let len = 0;
-  let i = 1;
-
-  while (i < M) {
-    if (pat[i] === pat[len]) {
-      len++;
-      lps[i] = len;
-      i++;
-    } else {
-      if (len !== 0) {
-        len = lps[len - 1];
-      } else {
-        lps[i] = 0;
-        i++;
-      }
-    }
-  }
-
-  return lps;
-}
-
 function KMPSearch(pat, txt) {
+  pat = pat.toLowerCase(); // Convert pattern to lowercase
+  txt = txt.toLowerCase(); // Convert text to lowercase
   const M = pat.length;
   const N = txt.length;
-  const lps = computeLPSArray(pat);
-  const indices = [];
+  const lps = new Array(M).fill(0);
+  computeLPSArray(pat, M, lps);
 
-  let i = 0; // index for txt
-  let j = 0; // index for pat
-
+  let i = 0,
+    j = 0;
   while (i < N) {
     if (pat[j] === txt[i]) {
       i++;
@@ -38,9 +15,8 @@ function KMPSearch(pat, txt) {
     }
 
     if (j === M) {
-      // Pattern found at index i - j
-      indices.push(i - j);
-      j = lps[j - 1];
+      //console.log("Your password contains personal information at position", i - j);
+      return 1;
     } else if (i < N && pat[j] !== txt[i]) {
       if (j !== 0) {
         j = lps[j - 1];
@@ -49,10 +25,27 @@ function KMPSearch(pat, txt) {
       }
     }
   }
-  if (indices.length === 0) {
-    return null;
+  return 0;
+}
+
+function computeLPSArray(pat, M, lps) {
+  let length = 0;
+  lps[0] = 0;
+  let i = 1;
+  while (i < M) {
+    if (pat[i] === pat[length]) {
+      length++;
+      lps[i] = length;
+      i++;
+    } else {
+      if (length !== 0) {
+        length = lps[length - 1];
+      } else {
+        lps[i] = 0;
+        i++;
+      }
+    }
   }
-  return indices;
 }
 
 // Example usage:
@@ -72,7 +65,6 @@ for (let i = 0; i < max; i++) {
 }
 
 export default KMPSearch;
-
 
 //   console.log(txt2)
 //   const password = "2004Suraj"
